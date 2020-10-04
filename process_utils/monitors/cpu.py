@@ -18,6 +18,7 @@ class Cpu(MonitoredSystemResource):
         self.logic_cores_num = psutil.cpu_count()
         self._logical_cores = []
 
+        # ToDo: synchronization
         self._transaction_lock = Lock()
 
         self._initialize()
