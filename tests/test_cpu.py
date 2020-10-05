@@ -1,6 +1,6 @@
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
-from process_utils.monitors.cpu import Cpu
+from process_utils.system_resources.cpu import Cpu
 from process_utils.monitor import Monitor
 
 

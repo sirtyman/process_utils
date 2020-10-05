@@ -1,6 +1,6 @@
 import psutil
 
-from process_utils.abstract import MonitoredSystemResource
+from process_utils.system_resources.abstract import MonitoredSystemResource
 from threading import Lock
 
 
@@ -12,8 +12,15 @@ class LogicCore:
         return other == self.logical_core_percentage
 
 
+class CpuData:
+    def __init__(self, cpu_total, logical_cores_usage):
+        self.cpu_total = cpu_total
+        self.logical_cores_usage = logical_cores_usage
+
+
 class Cpu(MonitoredSystemResource):
-    def __init__(self):
+    def __init__(self, collector=None):
+        self.collector = collector
         self.cpu_percent_total = None
         self.logic_cores_num = psutil.cpu_count()
         self._logical_cores = []
@@ -30,6 +37,11 @@ class Cpu(MonitoredSystemResource):
 
         for i, logical_core_percentage in enumerate(cpu_percent_by_logic_core):
             self[i].logical_core_percentage = logical_core_percentage
+
+        if self.collector:
+            cpu_data = CpuData(cpu_total=self.cpu_percent_total,
+                               logical_cores_usage=self._logical_cores)
+            self.collector.collect(cpu_data)
 
     def _initialize(self):
         for _ in range(self.logic_cores_num):
@@ -54,3 +66,11 @@ class Cpu(MonitoredSystemResource):
             usage += f'{core.logical_core_percentage}, '
 
         return f'{usage}\n'
+
+
+class CpuUsageCollector:
+    def __init__(self):
+        self.cpu_metrics = []
+
+    def collect(self, cpu_metric):
+        self.cpu_metrics.append(cpu_metric)

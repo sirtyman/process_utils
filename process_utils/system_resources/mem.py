@@ -1,6 +1,4 @@
-import psutil
-
-from process_utils.abstract import MonitoredSystemResource
+from process_utils.system_resources.abstract import MonitoredSystemResource
 
 
 class Memory(MonitoredSystemResource):

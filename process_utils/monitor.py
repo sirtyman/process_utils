@@ -1,4 +1,4 @@
-from threading import Thread, Lock, Event
+from threading import Thread, Event
 import time
 
 
@@ -15,6 +15,6 @@ class Monitor(Thread):
         self.is_running.set()
 
         while self.is_running:
-            for resuorce in self.monitored_resources:
-                resuorce.update()
+            for resource in self.monitored_resources:
+                resource.update()
             time.sleep(Monitor.UPDATE_RATE_S)
